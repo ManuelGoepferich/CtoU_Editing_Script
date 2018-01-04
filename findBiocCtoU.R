@@ -1,16 +1,14 @@
-# source('~/MMFEATURE/RNA_EDITING/SmartSeq_Script.R')
-
-# Define a class
+# Define a class for the output
 CtoUResult <- setClass("CtoUResult",
                       slots = list(
                         name = 'character',
                         valid =  'logical',
-                        events = 'numeric',
+                        events = 'matrix',
                         CmatrixList = 'list',
                         UmatrixList = 'list',
                         RmatrixList = 'list'
                       ))
-
+# Define the function
 findBiocCtoU <- function(path,                 # path where the BAM files are
                          bamFiles,             # the names of BAM files
                          BS,                   # BS genome (reference sequence)
@@ -23,7 +21,7 @@ findBiocCtoU <- function(path,                 # path where the BAM files are
 message(paste('Function "findBiocCtoU" started!', Sys.time()))
 CmatrixList <- UmatrixList <- RmatrixList <- lapply(queries, function(x){ NA })
 valid <- rep(TRUE, times = length(queries))
-events <- rep(0, times = length(queries))
+events <- matrix(0, nrow = length(queries), ncol = length(bamFiles))
 out <- new("CtoUResult")
 
 # for each UTR region
@@ -68,7 +66,7 @@ for(q in seq_along(queries) ){
 
     eidx <- (rowSums(af) >= minPile & cidx)
     emat[i, eidx] <- (af[ ,'T']/rowSums(af))[eidx]
-    events[q] <- length(which((af[ ,'T']/rowSums(af))[eidx] >= minConversion))
+    events[i, q] <- length(which((af[ ,'T']/rowSums(af))[eidx] >= minConversion))
   }
   # Output list for (UTR-, or Transcript-wise)
   CmatrixList[[q]] <- cmat
@@ -86,8 +84,9 @@ message(paste('Function "findBiocCtoU" finished!', Sys.time()))
 return(out)
 } # end of function
 
-
-
+## NOT RUN:
+## load the annotations (BAM files plus reference genome)
+## modify this (local dependencies!) 
 require(Rsamtools)
 require(GenomicFeatures)
 library(TxDb.Mmusculus.UCSC.mm10.ensGene)
@@ -118,3 +117,7 @@ res <- findBiocCtoU(
   utr3Ref = utr3Ref,
   queries = threeUTR_NSC
 )
+
+# Run from the command line
+# source('~/SmartSeq_Script.R')
+
