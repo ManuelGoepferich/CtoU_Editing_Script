@@ -3,7 +3,7 @@ CtoUResult <- setClass("CtoUResult",
                       slots = list(
                         name = 'character',
                         valid =  'logical',
-                        events = 'matrix',
+                        events = 'matrix', # not tested so far
                         CmatrixList = 'list',
                         UmatrixList = 'list',
                         RmatrixList = 'list'
@@ -115,8 +115,7 @@ res <- findBiocCtoU(
   bamFiles = cellPath,
   BS = BS,
   utr3Ref = utr3Ref,
-  queries = threeUTR_NSC
-)
+  queries = threeUTR_NSC)
 
 # Run from the command line
 # source('~/SmartSeq_Script.R')
