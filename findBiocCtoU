@@ -1,4 +1,5 @@
 # source('~/MMFEATURE/RNA_EDITING/SmartSeq_Script.R')
+# original version that was ran 28.12.2017
 
 # Define a class
 CtoUResult <- setClass("CtoUResult",
